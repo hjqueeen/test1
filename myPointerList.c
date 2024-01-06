@@ -33,8 +33,20 @@ void add(List *list, void *ptr) {
         exit(1);
     }
     new->ptr = ptr;
-    new->next = list->first;
-    list->first = new;
+    new->next = NULL;
+
+    if (isEmpty(list)) {
+        // add list item to the list as first item
+        list->first = new;
+    } else {
+        // add list item to end of the list
+        ListItem *current = list->first;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = new;
+    }
+
 }
 
 int size(List *list) {
@@ -50,26 +62,52 @@ int size(List *list) {
 
 void *get(List *list, int position) {
     assert(list != NULL); // Validation list
-    int i = 0;
+    int listSize = size(list);
+    if (isEmpty(list) || position < 1 || listSize < position) {
+        return NULL;
+    }
+
+    int i = 1;
     ListItem *current = list->first;
     while (i < position && current != NULL) {
         current = current->next;
         i++;
     }
-    return current->ptr;
+    if (current == NULL) {
+        return NULL;
+    } else {
+        return current->ptr;
+    }
 }
 
-List *contains(List *list, void *ptr) {
-    return NULL;
+int contains(List *list, void *ptr) {
+    assert(list != NULL); // Validation list
+    int count = 1;
+    ListItem *current = list->first;
+    while (current != NULL) {
+        if (*((int *) current->ptr) == *((int *) ptr)) {
+            printf("List has %dth element\n", count);
+            return count;
+        } else {
+            count++;
+            current = current->next;
+        }
+    }
+    printf("List has not this element\n");
+    return -1;
 }
 
 void *removeItem(List *list, int position) {
     assert(list != NULL); // Validation list
-    int i = 1;
+    int listSize = size(list);
+    if (isEmpty(list) || position < 1 || listSize < position) {
+        return NULL;
+    }
 
     ListItem *prev = NULL;
     ListItem *current = list->first;
     void *data = NULL;
+    int i = 1;
     // find list item with position
     while (i < position && current != NULL) {
         prev = current;
@@ -115,27 +153,23 @@ void printList(List *list) {
     ListItem *current = list->first;
 
     while (current != NULL) {
-        printf("%f", *((double *) current->ptr));
+        printf("%d, ", *((int *) current->ptr));
         current = current->next;
-
     }
+    printf("\n");
 }
 
 int testList(List *myList) {
     assert(myList != NULL);
-
-    for (int i = 20; i > 0; i--) {
+    for (int i = 1; i <= 20; i++) {
         int *data = (int *) malloc(sizeof(int));
         *data = i;
         add(myList, data);
     }
-
-    for (int i = 0; i < size(myList); i++) {
+    for (int i = 1; i <= size(myList); i++) {
         void *data = get(myList, i);
-        printf("%d\n", *(int *) data);
+        printf("%d, ", *(int *) data);
     }
-
-
     return 0;
 }
 
@@ -151,33 +185,44 @@ int pointerList() {
         printf("4 - Check if list is empty\n");
         printf("5 - Get list size\n");
         printf("6 - Print list\n");
-        printf("7 - Fill the list until 20\n");
-        printf("Command: ");
+        printf("7 - Contains?\n");
+        printf("8 - Fill the list from 1 until 20\n");
+        printf("Command:");
         scanf("%d", &selection);
-        int err = 0;
+
         int position = 0;
         int *data = NULL;
-        int *n = (int *) malloc(sizeof(int));
+        int *value = (int *) malloc(sizeof(int));
+
         switch (selection) {
             case 0:
                 deleteList(myList);
+                free(value);
                 return 0;
             case 1:
                 printf("Value: ");
-                scanf("%d", &n);
-                add(myList, n);
+                scanf("%d", value);
+                add(myList, value);
                 break;
             case 2:
                 printf("Position: ");
                 scanf("%d", &position);
                 data = get(myList, position);
-                printf("Value: %d\n", *data);
+                if (data == NULL) {
+                    printf("No such value.\n");
+                } else {
+                    printf("Value: %d\n", *data);
+                }
                 break;
             case 3:
                 printf("Position: ");
                 scanf("%d", &position);
                 data = removeItem(myList, position);
-                printf("Value: %d removed!\n", *data);
+                if (data == NULL) {
+                    printf("No such value.\n");
+                } else {
+                    printf("Value: %d removed!\n", *data);
+                }
                 break;
             case 4:
                 printf(isEmpty(myList) ? "List is empty\n" : "List is not empty\n");
@@ -189,6 +234,11 @@ int pointerList() {
                 printList(myList);
                 break;
             case 7:
+                printf("Value: ");
+                scanf("%d", value);
+                contains(myList, value);
+                break;
+            case 8:
                 testList(myList);
                 break;
             default:

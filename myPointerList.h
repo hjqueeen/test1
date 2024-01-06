@@ -27,7 +27,7 @@ int size(List *list);
 
 void *get(List *list, int position);
 
-List *contains(List *list, void *ptr);
+int contains(List *list, void *ptr);
 
 void *removeItem(List *list, int position);
 
