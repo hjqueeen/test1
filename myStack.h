@@ -5,21 +5,29 @@
 #include <stdlib.h>
 #include <assert.h>
 
-struct Stack {
-    struct StackItem *top;
-};
-struct StackItem {
+typedef struct StackItem {
     int data;
     struct StackItem *next;
-};
+} StackItem;
 
-struct Stack* initStack();
-void push(struct Stack *stack, int data);
-int pop(struct Stack *stack, int *err) ;
-int top(struct Stack *stack, int *err) ;
-int isEmpty(struct Stack *stack);
-int size(struct Stack *stack) ;
-void deleteStack(struct Stack *stack);
+typedef struct Stack {
+    StackItem *top;
+} Stack;
+
+ Stack *initStack();
+
+void push( Stack *stack, int data);
+
+int pop( Stack *stack, int *err);
+
+int top( Stack *stack, int *err);
+
+int isEmpty( Stack *stack);
+
+int size( Stack *stack);
+
+void deleteStack( Stack *stack);
+
 int stack();
 
 #endif //TESTVORBEREITEN_MYSTACK_H

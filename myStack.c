@@ -3,47 +3,48 @@
 #include <stdlib.h>
 #include <assert.h>
 
-struct Stack* initStack() {
-    struct Stack *stack = (struct Stack *) malloc(sizeof(struct Stack));
+Stack *initStack() {
+    Stack *stack = (Stack *) malloc(sizeof(Stack));
     if (stack == NULL) {
-        printf( "Memory allocation failed\n");
+        printf("Memory allocation failed\n");
         exit(1);
     }
     stack->top = NULL;
     return stack;
 }
 
-void push(struct Stack *stack, int data) {
+void push(Stack *stack, int data) {
     assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
 
-    struct StackItem *new = (struct StackItem *) malloc(sizeof(struct StackItem));
+    StackItem *new = (StackItem *) malloc(sizeof(StackItem));
     if (new == NULL) {
-        printf( "Memory allocation failed\n");
+        printf("Memory allocation failed\n");
         exit(1);
     }
+    // add new item to stack as first value
     new->next = stack->top;
     new->data = data;
     stack->top = new;
 }
 
-int pop(struct Stack *stack, int *err) {
+int pop(Stack *stack, int *err) {
     assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
-    
+
     if (stack->top == NULL) {
         *err = 1;
         return 0;
     }
     *err = 0;
-    struct StackItem *temp = stack->top->next;
+    StackItem *temp = stack->top->next;
     int popped = stack->top->data;
     free(stack->top);
     stack->top = temp;
     return popped;
 }
 
-int top(struct Stack *stack, int *err) {
+int top(Stack *stack, int *err) {
     assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
-    
+
     if (stack->top == NULL) {
         *err = 1;
         return 0;
@@ -52,16 +53,16 @@ int top(struct Stack *stack, int *err) {
     return stack->top->data;
 }
 
-int isEmpty(struct Stack *stack) {
+int isEmpty(Stack *stack) {
     assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
-    
+
     return stack->top == NULL;
 }
 
-int size(struct Stack *stack) {
+int size(Stack *stack) {
     assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
-    
-    struct StackItem *current = stack->top;
+
+    StackItem *current = stack->top;
     int size = 0;
     while (current != NULL) {
         size++;
@@ -70,9 +71,9 @@ int size(struct Stack *stack) {
     return size;
 }
 
-void deleteStack(struct Stack *stack) {
+void deleteStack(Stack *stack) {
     assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
-    
+
     while (!isEmpty(stack)) {
         int err;
         pop(stack, &err);
@@ -81,7 +82,7 @@ void deleteStack(struct Stack *stack) {
 }
 
 int main() {
-    struct Stack *stack = initStack();
+    Stack *stack = initStack();
     int selection;
     do {
         printf("0 - Exit program\n");

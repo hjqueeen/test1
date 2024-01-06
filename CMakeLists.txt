@@ -7,4 +7,6 @@ add_executable(testvorbereiten main.c
         myfunction.h
         myfunction.c
         myStack.h
-        myStack.c)
+        myStack.c
+        myPointerList.h
+        myPointerList.c)
