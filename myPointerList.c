@@ -183,7 +183,7 @@ int pointerList() {
         printf("2 - Get value via it's position\n");
         printf("3 - Remove value via it's posiotion\n");
         printf("4 - Check if list is empty\n");
-        printf("5 - Get list size\n");
+        printf("5 - Get list sizeStack\n");
         printf("6 - Print list\n");
         printf("7 - Contains?\n");
         printf("8 - Fill the list from 1 until 20\n");

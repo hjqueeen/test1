@@ -9,4 +9,6 @@ add_executable(testvorbereiten main.c
         myStack.h
         myStack.c
         myPointerList.h
-        myPointerList.c)
+        myPointerList.c
+        mybinarytree.h
+        mybinarytree.c)
