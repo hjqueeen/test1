@@ -1,4 +1,5 @@
 #include "myfunction.h"
+#include "myPointerList.h"
 #include <stdio.h>
 #include <time.h>
 #include <stdint.h>
@@ -55,6 +56,7 @@ int main() {
 
     time_function(&f1);
     time_function(&f2);
-
+    List *myList = initList();
+    pointerList();
     return 0;
 }

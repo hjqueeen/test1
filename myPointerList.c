@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
 // Entwickeln Sie eine Liste, die void Pointer in einer bestimmten Reihenfolge speichert,
 // so dass sie eine beliebige Datenstruktur speichern kann. Die Liste sollte mindestens
@@ -13,15 +14,6 @@
 // d. Remove – Entfernt das Element an der angegebenen Position.
 // e. IsEmpty – Überprüft, ob die Liste leer ist.
 // f. Size – Überprüft, wie viele Elemente in der Liste gespeichert sind.
-
-typedef struct ListItem {
-    void *ptr;
-    struct ListItem *next;
-} ListItem;
-
-typedef struct List {
-    ListItem *first;
-} List;
 
 List *initList() {
     List *list = (List *) malloc(sizeof(List));
@@ -58,9 +50,9 @@ int size(List *list) {
 
 void *get(List *list, int position) {
     assert(list != NULL); // Validation list
-    int i = 1;
+    int i = 0;
     ListItem *current = list->first;
-    while (i < position || current != NULL) {
+    while (i < position && current != NULL) {
         current = current->next;
         i++;
     }
@@ -71,14 +63,15 @@ List *contains(List *list, void *ptr) {
     return NULL;
 }
 
-void removeItem(List *list, int position) {
+void *removeItem(List *list, int position) {
     assert(list != NULL); // Validation list
     int i = 1;
 
     ListItem *prev = NULL;
     ListItem *current = list->first;
+    void *data = NULL;
     // find list item with position
-    while (i < position || current != NULL) {
+    while (i < position && current != NULL) {
         prev = current;
         current = current->next;
         i++;
@@ -88,22 +81,121 @@ void removeItem(List *list, int position) {
     } else {
         prev->next = current->next;
     }
+    data = current->ptr;
     free(current);
+    return data;
 }
-int isEmpty(List *list){
+
+int isEmpty(List *list) {
     assert(list != NULL); // Validation list
-    if(list->first == NULL){
+    if (list->first == NULL) {
         // list is empty
         return 1;
-    }else {
+    } else {
         // list is not empty
         return 0;
     }
 }
 
-int pointerList() {
-    List *list = initList();
+void deleteList(List *list) {
+    assert(list != NULL); // Validation list
+    ListItem *current = list->first;
+    ListItem *temp = NULL;
+    while (current != NULL) {
+        temp = current;
+        free(current->ptr);
+        current = current->next;
+        free(temp);
+    }
+    free(list);
+}
 
+void printList(List *list) {
+    assert(list != NULL); // Validation list
+    ListItem *current = list->first;
+
+    while (current != NULL) {
+        printf("%f", *((double *) current->ptr));
+        current = current->next;
+
+    }
+}
+
+int testList(List *myList) {
+    assert(myList != NULL);
+
+    for (int i = 20; i > 0; i--) {
+        int *data = (int *) malloc(sizeof(int));
+        *data = i;
+        add(myList, data);
+    }
+
+    for (int i = 0; i < size(myList); i++) {
+        void *data = get(myList, i);
+        printf("%d\n", *(int *) data);
+    }
+
+
+    return 0;
+}
+
+
+int pointerList() {
+    List *myList = initList();
+    int selection;
+    do {
+        printf("0 - Exit program\n");
+        printf("1 - Add value\n");
+        printf("2 - Get value via it's position\n");
+        printf("3 - Remove value via it's posiotion\n");
+        printf("4 - Check if list is empty\n");
+        printf("5 - Get list size\n");
+        printf("6 - Print list\n");
+        printf("7 - Fill the list until 20\n");
+        printf("Command: ");
+        scanf("%d", &selection);
+        int err = 0;
+        int position = 0;
+        int *data = NULL;
+        int *n = (int *) malloc(sizeof(int));
+        switch (selection) {
+            case 0:
+                deleteList(myList);
+                return 0;
+            case 1:
+                printf("Value: ");
+                scanf("%d", &n);
+                add(myList, n);
+                break;
+            case 2:
+                printf("Position: ");
+                scanf("%d", &position);
+                data = get(myList, position);
+                printf("Value: %d\n", *data);
+                break;
+            case 3:
+                printf("Position: ");
+                scanf("%d", &position);
+                data = removeItem(myList, position);
+                printf("Value: %d removed!\n", *data);
+                break;
+            case 4:
+                printf(isEmpty(myList) ? "List is empty\n" : "List is not empty\n");
+                break;
+            case 5:
+                printf("Size: %d\n", size(myList));
+                break;
+            case 6:
+                printList(myList);
+                break;
+            case 7:
+                testList(myList);
+                break;
+            default:
+                printf("Invalid command!\n");
+        }
+        printf("----------------\n");
+    } while (selection);
 
 
     return 0;
