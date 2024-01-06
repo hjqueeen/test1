@@ -1,97 +1,132 @@
 #include "myStack.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 struct Stack* initStack() {
     struct Stack *stack = (struct Stack *) malloc(sizeof(struct Stack));
+    if (stack == NULL) {
+        printf( "Memory allocation failed\n");
+        exit(1);
+    }
     stack->top = NULL;
     return stack;
 }
+
 void push(struct Stack *stack, int data) {
-    struct StackItem *temp = (struct StackItem *) malloc(sizeof(struct
-            StackItem));
-    temp->ptr = stack->top;
-    temp->data = data;
-    stack->top = temp;
+    assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
+
+    struct StackItem *new = (struct StackItem *) malloc(sizeof(struct StackItem));
+    if (new == NULL) {
+        printf( "Memory allocation failed\n");
+        exit(1);
+    }
+    new->next = stack->top;
+    new->data = data;
+    stack->top = new;
 }
-int pop(struct Stack *stack) {
-    if (stack->top == NULL)
-        return -1;
-    struct StackItem *temp = stack->top->ptr;
+
+int pop(struct Stack *stack, int *err) {
+    assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
+    
+    if (stack->top == NULL) {
+        *err = 1;
+        return 0;
+    }
+    *err = 0;
+    struct StackItem *temp = stack->top->next;
     int popped = stack->top->data;
     free(stack->top);
     stack->top = temp;
     return popped;
 }
-int top(struct Stack *stack) {
-    if (stack->top == NULL)
-        return -1;
+
+int top(struct Stack *stack, int *err) {
+    assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
+    
+    if (stack->top == NULL) {
+        *err = 1;
+        return 0;
+    }
+    *err = 0;
     return stack->top->data;
 }
+
 int isEmpty(struct Stack *stack) {
+    assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
+    
     return stack->top == NULL;
 }
+
 int size(struct Stack *stack) {
-    struct StackItem *itemPtr = stack->top;
+    assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
+    
+    struct StackItem *current = stack->top;
     int size = 0;
-    while (itemPtr != NULL) {
+    while (current != NULL) {
         size++;
-        itemPtr = itemPtr->ptr;
+        current = current->next;
     }
     return size;
 }
+
 void deleteStack(struct Stack *stack) {
-    while (!isEmpty(stack))
-        pop(stack);
+    assert(stack != NULL); // Validate that the 'stack' pointer is not NULL.
+    
+    while (!isEmpty(stack)) {
+        int err;
+        pop(stack, &err);
+    }
     free(stack);
 }
-int stack() {
+
+int main() {
     struct Stack *stack = initStack();
     int selection;
     do {
-        printf("0 - Programm beenden\n");
-        printf("1 - Wert hinzufuegen\n");
-        printf("2 - Wert ausgeben\n");
-        printf("3 - Wert ausgeben und entfernen\n");
-        printf("4 - Pruefen, ob der Stapel leer ist\n");
-        printf("5 - Groesse auslesen\n");
-        printf("Befehl: ");
+        printf("0 - Exit program\n");
+        printf("1 - Add value\n");
+        printf("2 - Display top value\n");
+        printf("3 - Display and remove top value\n");
+        printf("4 - Check if stack is empty\n");
+        printf("5 - Get stack size\n");
+        printf("Command: ");
         scanf("%d", &selection);
-        int n = 0;
+        int n = 0, err = 0;
         switch (selection) {
             case 0:
                 deleteStack(stack);
                 return 0;
             case 1:
-                printf("Wert: ");
+                printf("Value: ");
                 scanf("%d", &n);
                 push(stack, n);
                 break;
             case 2:
-                n = top(stack);
-                if (n == -1) {
-                    printf("Stapel ist leer.");
+                n = top(stack, &err);
+                if (err) {
+                    printf("Stack is empty.\n");
                 } else {
-                    printf("Wert: %d\n", n);
+                    printf("Value: %d\n", n);
                 }
                 break;
             case 3:
-                n = pop(stack);
-                if (n == -1) {
-                    printf("Stapel ist leer.");
+                n = pop(stack, &err);
+                if (err) {
+                    printf("Stack is empty.\n");
                 } else {
-                    printf("Wert: %d\n", n);
-                    printf("Letzter Wert wurde entfernt!\n");
+                    printf("Value: %d\n", n);
+                    printf("Top value removed!\n");
                 }
                 break;
             case 4:
-                printf(isEmpty(stack) ? "Stapel ist leer\n" : "Stapel ist nicht leer\n");
+                printf(isEmpty(stack) ? "Stack is empty\n" : "Stack is not empty\n");
                 break;
             case 5:
-                printf("Groesse: %d\n", size(stack));
+                printf("Size: %d\n", size(stack));
                 break;
             default:
-                printf("Ungueltiger Befehl!\n");
+                printf("Invalid command!\n");
         }
         printf("----------------\n");
     } while (selection);
