@@ -1,8 +1,10 @@
 #include "myPointerList.h"
+#include "sort.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <limits.h>
 
 // Entwickeln Sie eine Liste, die void Pointer in einer bestimmten Reihenfolge speichert,
 // so dass sie eine beliebige Datenstruktur speichern kann. Die Liste sollte mindestens
@@ -32,7 +34,7 @@ void add(List *list, void *ptr) {
         printf("Memory allocation failed\n");
         exit(1);
     }
-    new->ptr = ptr;
+    new->data = ptr;
     new->next = NULL;
 
     if (isEmpty(list)) {
@@ -49,7 +51,7 @@ void add(List *list, void *ptr) {
 
 }
 
-int size(List *list) {
+size_t sizeList(List *list) {
     assert(list != NULL); // Validation list
     size_t listSize = 0;
     ListItem *current = list->first;
@@ -62,7 +64,7 @@ int size(List *list) {
 
 void *get(List *list, int position) {
     assert(list != NULL); // Validation list
-    int listSize = size(list);
+    int listSize = sizeList(list);
     if (isEmpty(list) || position < 1 || listSize < position) {
         return NULL;
     }
@@ -76,7 +78,7 @@ void *get(List *list, int position) {
     if (current == NULL) {
         return NULL;
     } else {
-        return current->ptr;
+        return current->data;
     }
 }
 
@@ -85,7 +87,8 @@ int contains(List *list, void *ptr) {
     int count = 1;
     ListItem *current = list->first;
     while (current != NULL) {
-        if (*((int *) current->ptr) == *((int *) ptr)) {
+        // if type of *ptr is integer
+        if (*((int *) current->data) == *((int *) ptr)) {
             printf("List has %dth element\n", count);
             return count;
         } else {
@@ -99,7 +102,7 @@ int contains(List *list, void *ptr) {
 
 void *removeItem(List *list, int position) {
     assert(list != NULL); // Validation list
-    int listSize = size(list);
+    int listSize = sizeList(list);
     if (isEmpty(list) || position < 1 || listSize < position) {
         return NULL;
     }
@@ -119,7 +122,7 @@ void *removeItem(List *list, int position) {
     } else {
         prev->next = current->next;
     }
-    data = current->ptr;
+    data = current->data;
     free(current);
     return data;
 }
@@ -141,7 +144,7 @@ void deleteList(List *list) {
     ListItem *temp = NULL;
     while (current != NULL) {
         temp = current;
-        free(current->ptr);
+        free(current->data);
         current = current->next;
         free(temp);
     }
@@ -153,7 +156,7 @@ void printList(List *list) {
     ListItem *current = list->first;
 
     while (current != NULL) {
-        printf("%d, ", *((int *) current->ptr));
+        printf("%d, ", *((int *) current->data));
         current = current->next;
     }
     printf("\n");
@@ -166,13 +169,55 @@ int testList(List *myList) {
         *data = i;
         add(myList, data);
     }
-    for (int i = 1; i <= size(myList); i++) {
-        void *data = get(myList, i);
-        printf("%d, ", *(int *) data);
+    return 0;
+}
+
+int randomValueList(List *myList) {
+    assert(myList != NULL);
+    for (int i = 1; i <= 20; i++) {
+        int *data = (int *) malloc(sizeof(int));
+        *data = rand() % 20 + 1;
+        add(myList, data);
     }
     return 0;
 }
 
+void swapData(ListItem *i, ListItem *j) {
+    void *temp;
+    temp = i->data;
+    i->data = j->data;
+    j->data = temp;
+}
+
+void sortBubbleInt(List *list) {
+    if (list == NULL) {
+        exit(1);
+    }
+
+    ListItem *i, *j;
+    void *temp;
+
+    for (i = list->first; i != NULL; i = i->next) {
+        for (j = i; j != NULL; j = j->next) {
+            if (*((int *) i->data) > *((int *) j->data)) {
+                swapData(i, j);
+            }
+        }
+    }
+}
+
+void sortSelectInt(List *list) {
+    ListItem *i, *j;
+    for (i = list->first; i != NULL; i = i->next) {
+        ListItem *min = i;
+        for (j = i; j != NULL; j = j->next) {
+            if (*((int *) min->data) > *((int *) j->data)) {
+                min = j;
+            }
+        }
+        swapData(i, min);
+    }
+}
 
 int pointerList() {
     List *myList = initList();
@@ -180,13 +225,16 @@ int pointerList() {
     do {
         printf("0 - Exit program\n");
         printf("1 - Add value\n");
-        printf("2 - Get value via it's position\n");
-        printf("3 - Remove value via it's posiotion\n");
-        printf("4 - Check if list is empty\n");
-        printf("5 - Get list sizeStack\n");
+//        printf("2 - Get value via it's position(start from 1)\n");
+//        printf("3 - Remove value via it's posiotion(start from 1)\n");
+//        printf("4 - Check if list is empty\n");
+//        printf("5 - Get list sizeStack\n");
         printf("6 - Print list\n");
-        printf("7 - Contains?\n");
-        printf("8 - Fill the list from 1 until 20\n");
+//        printf("7 - Contains?\n");
+//        printf("8 - Fill the list from 1 until 20\n");
+        printf("9 - Fill the list 20 random value\n");
+        printf("10 - Sort list from small\n");
+        printf("11 - Sort select list from small\n");
         printf("Command:");
         scanf("%d", &selection);
 
@@ -228,7 +276,7 @@ int pointerList() {
                 printf(isEmpty(myList) ? "List is empty\n" : "List is not empty\n");
                 break;
             case 5:
-                printf("Size: %d\n", size(myList));
+                printf("Size: %d\n", sizeList(myList));
                 break;
             case 6:
                 printList(myList);
@@ -241,6 +289,16 @@ int pointerList() {
             case 8:
                 testList(myList);
                 break;
+            case 9:
+                randomValueList(myList);
+                break;
+            case 10:
+                sortBubbleInt(myList);
+                break;
+            case 11:
+                sortSelectInt(myList);
+                break;
+
             default:
                 printf("Invalid command!\n");
         }

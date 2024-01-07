@@ -2,6 +2,9 @@
 #include "myStack.h"
 #include "myPointerList.h"
 #include "mybinarytree.h"
+#include "sort.h"
+#include <stdlib.h>
+#include <time.h>
 
 void callByValue() {}
 
@@ -16,10 +19,11 @@ void f2(){
         callByReference();
 }
 int main() {
+    srand(time(NULL));
 //    time_function(&f1);
 //    time_function(&f2);
-//    pointerList();
+    pointerList();
 //    startStack();
-    startTree();
+//    startTree();
     return 0;
 }

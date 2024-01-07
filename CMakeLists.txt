@@ -11,4 +11,6 @@ add_executable(testvorbereiten main.c
         myPointerList.h
         myPointerList.c
         mybinarytree.h
-        mybinarytree.c)
+        mybinarytree.c
+        "sort.h"
+        "sort.c")

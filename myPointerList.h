@@ -1,5 +1,5 @@
 //
-// Created by 518597 on 06.01.2024.
+// Referenz: https://dream-and-develop.tistory.com/61
 //
 
 #ifndef TESTVORBEREITEN_MYPOINTERLIST_H
@@ -9,9 +9,10 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include "sort.h"
 
 typedef struct ListItem {
-    void *ptr;
+    void *data;
     struct ListItem *next;
 } ListItem;
 
@@ -23,7 +24,7 @@ List *initList();
 
 void add(List *list, void *ptr);
 
-int size(List *list);
+size_t sizeList(List *list);
 
 void *get(List *list, int position);
 
