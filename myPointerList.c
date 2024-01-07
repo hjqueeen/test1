@@ -190,8 +190,8 @@ void swapData(ListItem *i, ListItem *j) {
 }
 
 void bubbleSortListInt(List *list) {
-    if (list == NULL) {
-        exit(1);
+    if (list == NULL || list->first == NULL) {
+        return;
     }
 
     ListItem *i, *j;
@@ -207,6 +207,9 @@ void bubbleSortListInt(List *list) {
 }
 
 void selectionSortListInt(List *list) {
+    if (list == NULL || list->first == NULL) {
+        return;
+    }
     ListItem *i, *j;
     for (i = list->first; i != NULL; i = i->next) {
         ListItem *min = i;
@@ -220,41 +223,34 @@ void selectionSortListInt(List *list) {
 }
 
 void insertionSortListInt(List *list) {
+    // Check if the list is empty or has only one element
     if (list == NULL || list->first == NULL || list->first->next == NULL) {
         return;
     }
 
+    // 'sorted' will store the sorted part of the list
     ListItem *sorted = NULL;
 
     while (list->first != NULL) {
         ListItem *current = list->first;
         list->first = list->first->next;
-
-        // Find the correct position to insert the current node in the sorted part
+        // If the sorted list is empty or the current node is smaller than the first node of the sorted list
         if (sorted == NULL || *((int *) current->data) < *((int *) sorted->data)) {
             current->next = sorted;
             sorted = current;
         } else {
+            // Find the correct position to insert the current node in the sorted list
             ListItem *temp = sorted;
             while (temp->next != NULL && *((int *) current->data) > *((int *) temp->next->data)) {
                 temp = temp->next;
             }
+            // Insert the current node at the found position
             current->next = temp->next;
             temp->next = current;
         }
     }
-
+    // Update the original list's head to point to the sorted list
     list->first = sorted;
-
-//    ListItem *i, *j;
-//    for (i = list->first; i != NULL; i = i->next) {
-//        ListItem *temp = i->next;
-//        for (j = list->first; j != i->next; j = j->next) {
-//            if (*((int *) j->data) > *((int *) temp->data)) {
-//                swapData(j, temp);
-//            }
-//        }
-//    }
 }
 
 int pointerList() {

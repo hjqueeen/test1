@@ -2,6 +2,7 @@
 // Referenz
 // bubble sort list: https://dream-and-develop.tistory.com/61
 // selection, insertion sort list: https://eunjinii.tistory.com/80
+// quick sort list: https://visu4l.tistory.com/entry/Quick-Sort-linked-list%EB%A5%BC-%ED%80%B5%EC%A0%95%EB%A0%AC%EB%A1%9C-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0
 //
 
 #ifndef TESTVORBEREITEN_MYPOINTERLIST_H
