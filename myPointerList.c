@@ -253,25 +253,95 @@ void insertionSortListInt(List *list) {
     list->first = sorted;
 }
 
+// Helper function to partition the list for quick sort
+ListItem *partition(ListItem *head, ListItem **newHead, ListItem **newEnd) {
+    ListItem *pivot = head;
+    ListItem *prev = NULL, *cur = head, *tail = pivot;
+
+    // Iterate through the list and move nodes to the correct side of the pivot
+    while (cur != NULL) {
+        if (*((int *) cur->data) < *((int *) pivot->data)) { // Comparing int values stored in void pointers
+            // Keep tracks of last modified item
+            if (*newHead == NULL) *newHead = cur;
+            prev = cur;
+            cur = cur->next;
+        } else { // Move node to end of the list
+            if (prev) prev->next = cur->next;
+            ListItem *tmp = cur->next;
+            cur->next = NULL;
+            tail->next = cur;
+            tail = cur;
+            cur = tmp;
+        }
+    }
+
+    // Update newEnd to the last node
+    *newEnd = tail;
+
+    // Return the pivot node
+    return pivot;
+}
+
+// Recursive function to perform quick sort on the linked list
+ListItem *quickSortRecur(ListItem *head, ListItem *end) {
+    if (!head || head == end) return head;
+
+    ListItem *newHead = NULL, *newEnd = NULL;
+
+    // Partition the list and find the new pivot
+    ListItem *pivot = partition(head, &newHead, &newEnd);
+
+    // If pivot is the smallest element - no need to sort the left part
+    if (newHead != pivot) {
+        // Set the node before pivot as NULL
+        ListItem *tmp = newHead;
+        while (tmp->next != pivot) tmp = tmp->next;
+        tmp->next = NULL;
+
+        // Recur for the list before pivot
+        newHead = quickSortRecur(newHead, tmp);
+
+        // Change next of last node of the left half to pivot
+        tmp = getTail(newHead);
+        tmp->next = pivot;
+    }
+
+    // Recur for the list after the pivot element
+    pivot->next = quickSortRecur(pivot->next, newEnd);
+
+    return newHead;
+}
+
+// Function to get the tail of the linked list
+ListItem *getTail(ListItem *cur) {
+    while (cur != NULL && cur->next != NULL) cur = cur->next;
+    return cur;
+}
+
+// The main function to sort a linked list using quick sort algorithm
+void quickSortList(List *list) {
+    list->first = quickSortRecur(list->first, getTail(list->first));
+}
+
 int pointerList() {
     List *myList = initList();
     int selection;
     do {
         printf("0 - Exit program\n");
-        printf("1 - Add value\n");
-//        printf("2 - Get value via it's position(start from 1)\n");
-//        printf("3 - Remove value via it's posiotion(start from 1)\n");
-//        printf("4 - Check if list is empty\n");
-//        printf("5 - Get list sizeStack\n");
-        printf("6 - Print list\n");
-//        printf("7 - Contains?\n");
-//        printf("8 - Fill the list from 1 until 20\n");
-        printf("9 - Fill the list 20 random value\n");
-        printf("10 - Sort list from small\n");
-        printf("11 - Sort select list from small\n");
-        printf("12 - Insertion Sort list from small\n");
-
-        printf("Command:");
+        printf("1 - Add a value\n");
+        printf("2 - Get a value by its position (starting from 1)\n");
+        printf("3 - Remove a value by its position (starting from 1)\n");
+        printf("4 - Check if the list is empty\n");
+        printf("5 - Get the size of the list\n");
+        printf("6 - Print the list\n");
+        printf("7 - Check if a value exists in the list\n");
+        printf("8 - Fill the list with values from 1 to 20\n");
+        printf("9 - Fill the list with 20 random values\n");
+        printf("10 - Sort the list in ascending order (Bubble Sort)\n");
+        printf("11 - Sort the list in ascending order (Selection Sort)\n");
+        printf("12 - Sort the list in ascending order (Insertion Sort)\n");
+        printf("13 - Sort the list in ascending order (Quick Sort)\n");
+        printf("Command: ");
         scanf("%d", &selection);
 
         int position = 0;
@@ -337,13 +407,10 @@ int pointerList() {
             case 12:
                 insertionSortListInt(myList);
                 break;
-
             default:
                 printf("Invalid command!\n");
         }
         printf("----------------\n");
     } while (selection);
-
-
     return 0;
 }

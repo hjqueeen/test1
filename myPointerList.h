@@ -45,4 +45,6 @@ int testList(List *myList);
 
 int pointerList();
 
+ListItem *getTail(ListItem *cur);
+void moveNode(ListItem **destRef, ListItem **sourceRef);
 #endif //TESTVORBEREITEN_MYPOINTERLIST_H
