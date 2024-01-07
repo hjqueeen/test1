@@ -1,10 +1,6 @@
 #include "mybinarytree.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-
-#define LEFT "LEFT"
-#define RIGHT "RIGHT"
 
 //https://velog.io/@gogori6565/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0-%EC%9D%B4%EC%A7%84%ED%8A%B8%EB%A6%AC
 
@@ -67,6 +63,44 @@ TreeNode *searchValue(TreeNode *tree, int value) {
     }
 }
 
+TreeNode *searchMinValue(TreeNode *tree, int value) {
+    if (tree != NULL) {
+        TreeNode *current = tree->left;
+        while (current->left != NULL) {
+            current = current->left;
+        }
+        return current;
+    }
+    return NULL;
+}
+
+TreeNode *deleteValue(TreeNode *root, int value) {
+    if(searchValue(root, value) == NULL){
+        return root;
+    }
+    if (root->data > value) {
+        root->left = deleteValue(root->left, value);
+    } else if (root->data < value) {
+        root->right = deleteValue(root->right, value);
+    } else if (root->data == value) {
+        // if root has on child
+        if (root->left == NULL) {
+            TreeNode *temp = root->right;
+            free(root);
+            return temp;
+        } else if (root->right == NULL) {
+            TreeNode *temp = root->left;
+            free(root);
+            return temp;
+        }
+        // if root has two children
+        TreeNode *min = searchMinValue(root->right, value);
+        root->data = min->data;
+        free(min);
+    }
+    return root;
+}
+
 void startTree() {
     TreeNode *tree = NULL;
     tree = addNode(tree, 40);
@@ -87,10 +121,10 @@ void startTree() {
 
     inorderTraversal(tree);
     printf("\n");
-    preorderTraversal(tree);
-    printf("\n");
-    postorderTraversal(tree);
-    printf("\n");
+//    preorderTraversal(tree);
+//    printf("\n");
+//    postorderTraversal(tree);
+//    printf("\n");
 
     TreeNode *searched = searchValue(tree, 35);
     if (searched != NULL) {
@@ -98,10 +132,14 @@ void startTree() {
     } else {
         printf("No value\n");
     }
-   searched = searchValue(tree, 32);
+    searched = searchValue(tree, 32);
     if (searched != NULL) {
         printf("Value: %d \n", searched->data);
     } else {
         printf("No value\n");
     }
+    deleteValue(tree, 35);
+//    deleteValue(tree, 35);
+    deleteValue(tree, 60);
+    inorderTraversal(tree);
 }
