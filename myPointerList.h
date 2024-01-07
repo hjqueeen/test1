@@ -1,5 +1,7 @@
 //
-// Referenz: https://dream-and-develop.tistory.com/61
+// Referenz
+// bubble sort list: https://dream-and-develop.tistory.com/61
+// selection, insertion sort list: https://eunjinii.tistory.com/80
 //
 
 #ifndef TESTVORBEREITEN_MYPOINTERLIST_H

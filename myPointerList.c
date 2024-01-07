@@ -189,7 +189,7 @@ void swapData(ListItem *i, ListItem *j) {
     j->data = temp;
 }
 
-void sortBubbleInt(List *list) {
+void bubbleSortListInt(List *list) {
     if (list == NULL) {
         exit(1);
     }
@@ -206,7 +206,7 @@ void sortBubbleInt(List *list) {
     }
 }
 
-void sortSelectInt(List *list) {
+void selectionSortListInt(List *list) {
     ListItem *i, *j;
     for (i = list->first; i != NULL; i = i->next) {
         ListItem *min = i;
@@ -217,6 +217,44 @@ void sortSelectInt(List *list) {
         }
         swapData(i, min);
     }
+}
+
+void insertionSortListInt(List *list) {
+    if (list == NULL || list->first == NULL || list->first->next == NULL) {
+        return;
+    }
+
+    ListItem *sorted = NULL;
+
+    while (list->first != NULL) {
+        ListItem *current = list->first;
+        list->first = list->first->next;
+
+        // Find the correct position to insert the current node in the sorted part
+        if (sorted == NULL || *((int *) current->data) < *((int *) sorted->data)) {
+            current->next = sorted;
+            sorted = current;
+        } else {
+            ListItem *temp = sorted;
+            while (temp->next != NULL && *((int *) current->data) > *((int *) temp->next->data)) {
+                temp = temp->next;
+            }
+            current->next = temp->next;
+            temp->next = current;
+        }
+    }
+
+    list->first = sorted;
+
+//    ListItem *i, *j;
+//    for (i = list->first; i != NULL; i = i->next) {
+//        ListItem *temp = i->next;
+//        for (j = list->first; j != i->next; j = j->next) {
+//            if (*((int *) j->data) > *((int *) temp->data)) {
+//                swapData(j, temp);
+//            }
+//        }
+//    }
 }
 
 int pointerList() {
@@ -235,6 +273,8 @@ int pointerList() {
         printf("9 - Fill the list 20 random value\n");
         printf("10 - Sort list from small\n");
         printf("11 - Sort select list from small\n");
+        printf("12 - Insertion Sort list from small\n");
+
         printf("Command:");
         scanf("%d", &selection);
 
@@ -293,10 +333,13 @@ int pointerList() {
                 randomValueList(myList);
                 break;
             case 10:
-                sortBubbleInt(myList);
+                bubbleSortListInt(myList);
                 break;
             case 11:
-                sortSelectInt(myList);
+                selectionSortListInt(myList);
+                break;
+            case 12:
+                insertionSortListInt(myList);
                 break;
 
             default:
