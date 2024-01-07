@@ -6,17 +6,6 @@
 #include <string.h>
 #include <limits.h>
 
-// Entwickeln Sie eine Liste, die void Pointer in einer bestimmten Reihenfolge speichert,
-// so dass sie eine beliebige Datenstruktur speichern kann. Die Liste sollte mindestens
-// folgende Funktionen haben.
-// a. Add – Fügt ein Element am Ende der Liste hinzu.
-// b. Get – Gibt ein Element an einer bestimmten Position zurück.
-// c. Contains – Überprüft, ob ein Element in der Liste gespeichert ist und gibt die
-//        Position zurück.
-// d. Remove – Entfernt das Element an der angegebenen Position.
-// e. IsEmpty – Überprüft, ob die Liste leer ist.
-// f. Size – Überprüft, wie viele Elemente in der Liste gespeichert sind.
-
 List *initList() {
     List *list = (List *) malloc(sizeof(List));
     if (list == NULL) {
