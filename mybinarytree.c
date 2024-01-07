@@ -75,14 +75,14 @@ TreeNode *searchMinValue(TreeNode *tree, int value) {
 }
 
 TreeNode *deleteValue(TreeNode *root, int value) {
-    if(searchValue(root, value) == NULL){
+    if ((searchValue(root, value) == NULL) || root == NULL) {
         return root;
     }
     if (root->data > value) {
         root->left = deleteValue(root->left, value);
     } else if (root->data < value) {
         root->right = deleteValue(root->right, value);
-    } else if (root->data == value) {
+    } else { // if root->data == value
         // if root has on child
         if (root->left == NULL) {
             TreeNode *temp = root->right;
@@ -96,7 +96,7 @@ TreeNode *deleteValue(TreeNode *root, int value) {
         // if root has two children
         TreeNode *min = searchMinValue(root->right, value);
         root->data = min->data;
-        free(min);
+        root->right = deleteValue(root->right, min->data);
     }
     return root;
 }
@@ -138,8 +138,10 @@ void startTree() {
     } else {
         printf("No value\n");
     }
-    deleteValue(tree, 35);
-//    deleteValue(tree, 35);
+    deleteValue(tree, 20);
+    deleteValue(tree, 20);
+    inorderTraversal(tree);
+    printf("\n");
     deleteValue(tree, 60);
     inorderTraversal(tree);
 }
