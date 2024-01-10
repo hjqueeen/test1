@@ -13,4 +13,8 @@ add_executable(testvorbereiten main.c
         mybinarytree.h
         mybinarytree.c
         "sort.h"
-        "sort.c")
+        "sort.c"
+        binarytreecontact.h
+        binarytreecontact.c
+        stack.h
+        stack.c)

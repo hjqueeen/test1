@@ -312,6 +312,30 @@ void quickSortList(List *list) {
     list->first = quickSortRecur(list->first, getTail(list->first));
 }
 
+void saveListInFile(char filepath[], struct List *list) {
+    FILE *file = fopen(filepath, "w");
+    ListItem *item = list->first;
+    while (item) {
+//        fprintf(file, "%d, ", *((int *) item->data));
+        fwrite(item->data, sizeof(int), 1, file);
+        item = item->next;
+    }
+    fclose(file);
+}
+
+List *loadListFromFile(char filepath[]) {
+    FILE *file = fopen(filepath, "r");
+    List *list = initList();
+    while (!feof(file)) {
+        int *number = (int *) malloc(sizeof(int));
+//        fscanf(file, "%d, ", number);
+        if (fread(number, sizeof(int), 1, file))
+            add(list, number);
+    }
+    fclose(file);
+    return list;
+}
+
 int pointerList() {
     List *myList = initList();
     int selection;
@@ -326,10 +350,12 @@ int pointerList() {
         printf("7 - Check if a value exists in the list\n");
         printf("8 - Fill the list with values from 1 to 20\n");
         printf("9 - Fill the list with 20 random values\n");
-        printf("10 - Sort the list in ascending order (Bubble Sort)\n");
+        printf(v);
         printf("11 - Sort the list in ascending order (Selection Sort)\n");
         printf("12 - Sort the list in ascending order (Insertion Sort)\n");
         printf("13 - Sort the list in ascending order (Quick Sort)\n");
+        printf("14 - Write the list in file\n");
+        printf("15 - Load the list from file\n");
         printf("Command: ");
         scanf("%d", &selection);
 
@@ -395,6 +421,15 @@ int pointerList() {
                 break;
             case 12:
                 insertionSortListInt(myList);
+                break;
+            case 14:
+                saveListInFile("../list.log", myList);
+                break;
+            case 15:
+                deleteList(myList);
+                free(value);
+                myList = initList();
+                myList = loadListFromFile("../list.log");
                 break;
             default:
                 printf("Invalid command!\n");

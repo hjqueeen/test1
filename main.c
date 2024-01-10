@@ -3,6 +3,7 @@
 #include "myPointerList.h"
 #include "mybinarytree.h"
 #include "sort.h"
+#include "binarytreecontact.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -19,10 +20,11 @@ void f2(){
         callByReference();
 }
 int main() {
-    srand(time(NULL));
+    startTreeContact();
+//    srand(time(NULL));
 //    time_function(&f1);
 //    time_function(&f2);
-    pointerList();
+//    pointerList();
 //    startStack();
 //    startTree();
     return 0;
